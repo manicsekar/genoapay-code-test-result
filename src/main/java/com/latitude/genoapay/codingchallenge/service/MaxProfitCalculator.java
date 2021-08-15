@@ -4,7 +4,6 @@ import com.latitude.genoapay.codingchallenge.dto.InputStockPrices;
 import com.latitude.genoapay.codingchallenge.dto.OutputMaxStockProfit;
 
 import java.time.OffsetDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 public class MaxProfitCalculator {
@@ -21,33 +20,18 @@ public class MaxProfitCalculator {
         validateSeries(stockPriceArr);
         OutputMaxStockProfit maxStockProfit = new OutputMaxStockProfit();
 
-        int minPrice = Integer.MAX_VALUE;
-        int minIndex = 0;
-        int maxPrice = 0;
-        int maxIndex = Integer.MAX_VALUE;
-
-        for (int i = 0; i < stockPriceArr.length; i++) {
-            int currentPrice = stockPriceArr[i];
-            validatePrice(currentPrice);
-
-            if (currentPrice < minPrice && i < maxIndex) {
-                minPrice = currentPrice;
-                minIndex = i;
-            }
-            if (currentPrice > maxPrice && i > minIndex) {
-                maxPrice = currentPrice;
-                maxIndex = i;
-            }
-        }
+        int [] buySell = calcBuySell(stockPriceArr);
+        Integer buyPrice = buySell[0];
+        Integer sellPrice = buySell[1];
 
         maxStockProfit.setIdentifier(inputstockPrices.getIdentifier());
         maxStockProfit.setStartdate(inputstockPrices.getStartdate());
         maxStockProfit.setEnddate(inputstockPrices.getEnddate());
         maxStockProfit.setProcessedDate(OffsetDateTime.now());
         maxStockProfit.setPrices(inputstockPrices.getPrices());
-        maxStockProfit.setBuy(minPrice);
-        maxStockProfit.setSell(maxPrice);
-        maxStockProfit.setProfit(maxPrice - minPrice);
+        maxStockProfit.setBuy(buyPrice);
+        maxStockProfit.setSell(sellPrice);
+        maxStockProfit.setProfit(sellPrice - buyPrice);
 
         return maxStockProfit;
     }
@@ -73,25 +57,25 @@ public class MaxProfitCalculator {
     private static int[] calcBuySell(int[] stockPrices){
         validateSeries(stockPrices);
 
-        int minPrice = Integer.MAX_VALUE;
+        int buyPrice = Integer.MAX_VALUE;
         int minIndex = 0;
-        int maxPrice = 0;
+        int sellPrice = 0;
         int maxIndex = Integer.MAX_VALUE;
 
         for (int i = 0; i < stockPrices.length; i++) {
             int currentPrice = stockPrices[i];
             validatePrice(currentPrice);
 
-            if (currentPrice < minPrice && i < maxIndex) {
-                minPrice = currentPrice;
+            if (currentPrice < buyPrice && i < maxIndex) {
+                buyPrice = currentPrice;
                 minIndex = i;
             }
-            if (currentPrice > maxPrice && i > minIndex) {
-                maxPrice = currentPrice;
+            if (currentPrice > sellPrice && i > minIndex) {
+                sellPrice = currentPrice;
                 maxIndex = i;
             }
         }
-        return new int[]{minPrice, maxPrice};
+        return new int[]{buyPrice, sellPrice};
     }
 
 }
