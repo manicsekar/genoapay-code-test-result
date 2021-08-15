@@ -1,0 +1,87 @@
+swagger: '2.0'
+info:
+  description: API Max Stock Profit Service
+  version: 1.0.0
+  title:  API Max Stock Profit Service
+  contact:
+    email: xxx@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+produces:
+  - application/json
+schemes:
+  - https
+paths:
+  '/maxprofit':
+    post:
+      tags:
+        - Stock Max Profit
+      summary: Get Maximum Profit of stock
+      operationId: getMaxProfit
+      description: Get Maximum Profit of stock in a day
+      produces:
+        - application/json
+      parameters:
+        - name: stock_prices
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/stock_prices'
+      responses:
+        '200':
+          description: 200 OK
+          schema:
+              $ref: '#/definitions/max_profit'
+definitions:
+  stock_prices:
+    type: object
+    required:
+      - identifier
+      - startDate
+      - endDate
+      - prices
+    properties:
+      identifier:
+        type: string
+      startdate:
+        type: string
+        format: date-time
+      enddate:
+        type: string
+        format: date-time
+      prices:
+        type: array
+        items:
+          type: integer
+  max_profit:
+    type: object
+    required:
+      - identifier
+        - startDate
+        - endDate
+        - prices
+    properties:
+      identifier:
+        type: string
+      startDate:
+        type: string
+        format: date-time
+      endDate:
+        type: string
+        format: date-time
+      prices:
+        type: array
+        items:
+          type: integer
+      processedDate:
+        type: string
+        format: date-time
+      buy:
+        type: number
+      sell:
+        type: number
+      profit:
+        type: number
+host: maxprofit
+basePath: /v1
